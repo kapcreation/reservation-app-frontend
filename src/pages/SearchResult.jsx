@@ -2,6 +2,7 @@ import { useState } from "react"
 import format from "date-fns/format"
 import { DateRange } from "react-date-range"
 import { hotelImg } from '../assets'
+import { Link } from 'react-router-dom'
 
 const Search = () => {
   const [dateIsOpen, setDateIsOpen] = useState(false)
@@ -105,7 +106,7 @@ const SearchResult = () => {
                 <div className="w-full md:w-[20%] md:text-right p-2">
                   <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
                   <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
-                  <button type="button" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</button>
+                  <Link to="/hotels/123" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</Link>
                 </div>
               </div>
 
@@ -123,7 +124,7 @@ const SearchResult = () => {
                 <div className="w-full md:w-[20%] md:text-right p-2">
                   <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
                   <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
-                  <button type="button" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</button>
+                  <Link to="/hotels/123" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</Link>
                 </div>
               </div>
 
@@ -141,7 +142,7 @@ const SearchResult = () => {
                 <div className="w-full md:w-[20%] md:text-right p-2">
                   <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
                   <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
-                  <button type="button" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</button>
+                  <Link to="/hotels/123" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</Link>
                 </div>
               </div>
 
@@ -159,7 +160,7 @@ const SearchResult = () => {
                 <div className="w-full md:w-[20%] md:text-right p-2">
                   <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
                   <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
-                  <button type="button" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</button>
+                  <Link to="/hotels/123" className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</Link>
                 </div>
               </div>
              

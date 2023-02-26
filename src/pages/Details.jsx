@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { hotelImg } from '../assets'
+import { hotelImgs } from '../assets'
+import RoomSelect from '../components/RoomSelect';
 
 const Details = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false)
+
   return (
     <div>
       <div className="container mx-auto px-4">
@@ -14,33 +17,33 @@ const Details = () => {
             <p className='font-semibold text-green-500 mb-2'>Book a stay over $150 at this property and get a free airport taxi</p>
           </div>
          
-          <button type='button' className='bg-primary font-semibold text-white py-2 px-4 rounded-md mb-2 h-max'>Reserve or Book Now!</button>
+          <button onClick={()=>setModalIsOpen(true)} type='button' className='bg-primary font-semibold text-white py-2 px-4 rounded-md mb-2 h-max'>Reserve or Book Now!</button>
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[190px] gap-1 mb-4'>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[0]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[1]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[2]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[3]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[0]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[1]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[2]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
           <div className='w-full h-full'>
-            <img src={hotelImg} alt="" className='w-full h-full object-cover rounded-md' />
+            <img src={hotelImgs[3]} alt="" className='w-full h-full object-cover rounded-md' />
           </div>
         </div>
         
@@ -57,10 +60,12 @@ const Details = () => {
               <b className='text-slate-900'>$518</b> (2 nights)
             </span>
 
-            <button type='button' className='w-full bg-primary font-semibold text-white py-2 px-4 rounded-md h-max'>Reserve or Book Now!</button>
+            <button onClick={()=>setModalIsOpen(true)} type='button' className='w-full bg-primary font-semibold text-white py-2 px-4 rounded-md h-max'>Reserve or Book Now!</button>
           </div>
         </div>
       </div>
+
+      {modalIsOpen && <RoomSelect onClose={()=>setModalIsOpen(false)} />}
     </div>
   )
 }

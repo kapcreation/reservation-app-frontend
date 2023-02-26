@@ -6,9 +6,10 @@ import { format } from "date-fns";
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from 'react-router-dom'
 
 const Dropdown = ({ options, setOptions, onClose }) => {
-
+  
   return (
     <div className="absolute z-50 top-12 p-4 bg-white rounded-md border border-primary shadow-md min-w-[300px] left-1/2 -translate-x-1/2">
       <div className="flex justify-between mb-1 items-center">
@@ -42,6 +43,7 @@ const Dropdown = ({ options, setOptions, onClose }) => {
 }
 
 const Searchbox = () => {
+  const navigate = useNavigate()
   const [dateIsOpen, setDateIsOpen] = useState(false)
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false)
   const [options, setOptions] = useState({
@@ -79,6 +81,7 @@ const Searchbox = () => {
 
   function handleSubmit(e) {
     e.preventDefault()
+    navigate("/search?destination=test")
   }
 
   return (
