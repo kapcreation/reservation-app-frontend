@@ -9,12 +9,18 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null)
 
   async function login(data) {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, data)
+    const res = await axios.post(`/auth/login`, data)
     setUser(res.data)
   }
 
-  async function register() {
+  async function register(data) {
+    const res = await axios.post("/auth/register", data)
+    setUser(res.data)
+  }
 
+  function logout() {
+    localStorage.removeItem("user")
+    setUser(null)
   }
 
   useEffect(() => {
@@ -23,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   }, [user])
   
 
-  const value={ user, login, register }
+  const value={ user, login, register, logout }
   return (
     <AuthContext.Provider value={value}>
       {children}

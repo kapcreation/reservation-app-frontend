@@ -1,10 +1,19 @@
 import React from 'react'
 import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 
 const RoomSelect = ({ onClose }) => {
+  const navigate = useNavigate()
+
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    navigate("/thankyou")
+  }
+
   return (
     <div onClick={onClose} className='fixed top-0 left-0 w-screen h-screen z-50 bg-slate-900/20 flex items-center justify-center'>
-      <form onClick={e=>e.stopPropagation()} onSubmit={(e)=>e.preventDefault()} className='relative w-full max-w-md bg-white rounded-md p-4'>
+      <form onClick={e=>e.stopPropagation()} onSubmit={handleSubmit} className='relative w-full max-w-md bg-white rounded-md p-4'>
         <button onClick={onClose} type='button' className='absolute top-0 right-0 bg-slate-900 rounded-full text-white flex justify-center items-center p-1 translate-x-1 -translate-y-1'>
           <CloseIcon />
         </button>

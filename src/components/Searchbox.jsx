@@ -7,6 +7,8 @@ import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from "react-redux";
+import { newSearch } from '../redux/searchSlice'
 
 const Dropdown = ({ options, setOptions, onClose }) => {
   
@@ -43,6 +45,7 @@ const Dropdown = ({ options, setOptions, onClose }) => {
 }
 
 const Searchbox = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const [dateIsOpen, setDateIsOpen] = useState(false)
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false)
@@ -81,12 +84,23 @@ const Searchbox = () => {
 
   function handleSubmit(e) {
     e.preventDefault()
-    navigate("/search?destination=test")
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const destination = formData.get("destination")
+    const newDates = {
+      ...dates,
+      startDate: dates.startDate.getTime(),
+      endDate: dates.endDate.getTime()
+    }
+    dispatch(newSearch({ destination, dates: newDates, options }))
+
+    navigate("/search", { state: { destination, dates: newDates, options } })
   }
 
   return (
-    <div className='w-full absolute bottom-0 translate-y-[50%] px-12 lg:px-24'>
-      <form className='flex flex-col lg:flex-row p-2 mx-auto bg-white rounded-md border-2 border-primary gap-4 items-center lg:gap-0'>
+    <div className='w-full absolute bottom-0 translate-y-[50%] px-12 xl:px-24'>
+      <form onSubmit={handleSubmit} className='flex flex-col lg:flex-row p-2 mx-auto bg-white rounded-md border-2 border-primary gap-4 items-center lg:gap-0'>
         {/* Destination input */}
         <label htmlFor='destinationInput' className='flex items-center gap-1 w-max lg:w-1/4'>
           <BedIcon />
@@ -119,7 +133,7 @@ const Searchbox = () => {
           {dropdownIsOpen && <Dropdown options={options} setOptions={setOptions} onClose={()=>setDropdownIsOpen(false)} />}
         </div>
 
-        <button onClick={handleSubmit} className="bg-primary rounded-md px-4 py-2 w-full font-semibold text-white lg:w-1/4">Search</button>
+        <button className="bg-primary rounded-md px-4 py-2 w-full font-semibold text-white lg:w-1/4">Search</button>
       </form>
     </div>
   )

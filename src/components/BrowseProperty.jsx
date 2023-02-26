@@ -1,7 +1,13 @@
 import React from 'react'
 import { hotelImg, apartmentImg, resortImg, villaImg } from '../assets'
+import useFetch from '../hooks/useFetch'
 
 const BrowseProperty = () => {
+  const { data, loading, error } = useFetch("/hotels/count/type")
+  
+  const images = [ hotelImg, apartmentImg, resortImg, villaImg ]
+
+  if (loading) return <>Loading...</>
   return (
     <div className='py-12'>
       <div className="container px-4 mx-auto">
@@ -11,37 +17,15 @@ const BrowseProperty = () => {
         </div>
         <div className="flex flex-wrap">
 
-          <div className='w-full p-2 sm:w-1/2 md:w-1/3 lg:w-1/4'>
-            <div className='w-full'>
-              <img src={hotelImg} alt="" className='w-full h-[250px] object-cover rounded-md' />
-              <h1 className='font-bold text-lg text-slate-900'>Hotels</h1>
-              <p className='text-slate-500'>941,505 hotels</p>
+          {images.map((image, i)=> (
+            <div className='w-full p-2 sm:w-1/2 md:w-1/3 lg:w-1/4' key={i}>
+              <div className='w-full'>
+                <img src={image} alt="" className='w-full h-[250px] object-cover rounded-md' />
+                <h1 className='font-bold text-lg text-slate-900'>{data[i].type}s</h1>
+                <p className='text-slate-500'>{data[i].count} {data[i].type}s</p>
+              </div>
             </div>
-          </div>
-
-          <div className='w-full p-2 sm:w-1/2 md:w-1/3 lg:w-1/4'>
-            <div className='w-full'>
-              <img src={apartmentImg} alt="" className='w-full h-[250px] object-cover rounded-md' />
-              <h1 className='font-bold text-lg text-slate-900'>Apartments</h1>
-              <p className='text-slate-500'>241,982 apartments</p>
-            </div>
-          </div>
-
-          <div className='w-full p-2 sm:w-1/2 md:w-1/3 lg:w-1/4'>
-            <div className='w-full'>
-              <img src={resortImg} alt="" className='w-full h-[250px] object-cover rounded-md' />
-              <h1 className='font-bold text-lg text-slate-900'>Resorts</h1>
-              <p className='text-slate-500'>120,019 resorts</p>
-            </div>
-          </div>
-
-          <div className='w-full p-2 sm:w-1/2 md:w-1/3 lg:w-1/4'>
-            <div className='w-full'>
-              <img src={villaImg} alt="" className='w-full h-[250px] object-cover rounded-md' />
-              <h1 className='font-bold text-lg text-slate-900'>Villas</h1>
-              <p className='text-slate-500'>41,200 villas</p>
-            </div>
-          </div>
+          ))}
 
         </div>
       </div>

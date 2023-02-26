@@ -6,34 +6,24 @@ const useFecth = (url) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-        const res = await axios.get(url)
-        setData(res.data)
-        setLoading(false)
-      } catch (error) {
-        setError(error.message)
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
-
-  const reFetch = async () => {
+  async function fetchData() {
     try {
       setLoading(true)
       const res = await axios.get(url)
       setData(res.data)
       setLoading(false)
     } catch (error) {
-      setError(error.message)
+      console.error(error)
+      if (error.response) setError(error.response.data)
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
   
-  return { data, loading, error, reFetch }
+  return { data, loading, error, fetchData }
 }
 
 export default useFecth

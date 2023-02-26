@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  city: null,
+  destination: null,
   dates: null,
   options: {
     adult: null,
@@ -14,7 +14,7 @@ export const searchSlice = createSlice({
   initialState: initialState,
   reducers: {
     newSearch: (state, action) => {
-      console.log(action.payload)
+      localStorage.setItem("search", JSON.stringify({ ...state, ...action.payload }))
       
       return { ...state, ...action.payload }
     },

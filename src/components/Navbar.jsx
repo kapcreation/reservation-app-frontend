@@ -8,9 +8,11 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import AttractionsIcon from '@mui/icons-material/Attractions';
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import { useLocation, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const location = useLocation()
+  const { user, logout } = useAuth()
 
   return (
     <header id="header" className="bg-blue-800 w-full flex justify-center items-center">
@@ -31,7 +33,11 @@ const Navbar = () => {
               <DarkModeOutlinedIcon />
             </button>
             {/* Auth Button */}
-            {location.pathname != "/login" && location.pathname != "/register" && <Link to="/login" className='hidden md:flex bg-white text-primary px-4 py-2 rounded-md font-semibold'>Sign in</Link>}
+            {!user && location.pathname != "/login" && location.pathname != "/register" && <Link to="/login" className='bg-white text-primary px-4 py-2 rounded-md font-semibold'>Sign in</Link>}
+            {user && <>
+              <span className='font-semibold text-white max-w-[100px] truncate'>{user.username}</span>
+              <button type='button' onClick={logout} className='bg-white text-primary px-4 py-2 rounded-md font-semibold'>Log out</button>
+            </>}
             {/* Mobile menu button */}
             <button type='button' className="md:hidden text-white">
               <MenuIcon />

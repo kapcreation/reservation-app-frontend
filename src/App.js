@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchResult from "./pages/SearchResult";
 import Details from "./pages/Details";
+import Thankyou from "./pages/Thankyou";
 
 function App() {
   const Layout = () => {
@@ -36,6 +37,7 @@ function App() {
             <Route path="hotels/:id" element={<Details />} />
             <Route path="login" element={<SignIn />} />
             <Route path="register" element={<Register />} />
+            <Route path="thankyou" element={<Thankyou />} />
           </Route>
         </Routes>
       </BrowserRouter>
