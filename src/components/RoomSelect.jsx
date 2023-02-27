@@ -75,14 +75,14 @@ const RoomSelect = ({ hotelId, onClose }) => {
         {data.length <= 0 && <span className='text-slate-500'>No Room</span>}
         <div className='p-2 flex flex-col gap-4'>
           {data.map((room, i)=>(
-            <div className='flex justify-between' key={i}>
+            <div className='flex justify-between gap-4' key={i}>
               <div>
                 <h1 className='font-semibold text-lg text-slate-900 mb-2'>{room.title}</h1>
-                <p className='text-slate-500 mb-1'>{room.desc}</p>
+                <p className='text-slate-500 mb-1 max-h-16 overflow-y-auto'>{room.desc}</p>
                 <span className='block text-slate-500 mb-1'>Max people: {room.maxPeople}</span>
                 <span className='block text-primary font-semibold'>${room.price}</span>
               </div>
-              <div className='grid grid-cols-2 gap-1 h-max'>
+              <div className='grid grid-cols-2 gap-1 h-max min-w-max'>
               
               {room.roomNumbers.map((roomNumber, i)=> (
                 <div className='flex flex-col items-center' key={i}>
