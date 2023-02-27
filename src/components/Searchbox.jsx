@@ -93,9 +93,9 @@ const Searchbox = () => {
       startDate: dates.startDate.getTime(),
       endDate: dates.endDate.getTime()
     }
-    dispatch(newSearch({ destination, dates: newDates, options }))
+    dispatch(newSearch({ dates: newDates, options }))
 
-    navigate("/search")
+    navigate(`/search?destination=${destination}`)
   }
 
   return (

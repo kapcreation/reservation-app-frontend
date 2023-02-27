@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  destination: null,
   dates: null,
   options: {
     adult: null,
@@ -19,6 +18,8 @@ export const searchSlice = createSlice({
       return { ...state, ...action.payload }
     },
     resetSearch: (state) => {
+      localStorage.removeItem("search")
+
       return initialState
     }
   },

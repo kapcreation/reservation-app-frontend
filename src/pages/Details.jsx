@@ -8,7 +8,14 @@ import useFetch from '../hooks/useFetch'
 import { useSelector } from 'react-redux'
 
 const Details = () => {
-  const { dates, options } = JSON.parse(localStorage.getItem("search"))
+  const search = JSON.parse(localStorage.getItem("search")) || {}
+  const { dates: initialDates = null, options = { adults: 2, children: 0, rooms: 1 } } = search
+  const [dates, setDates] = useState({
+    startDate: initialDates ? new Date(initialDates.startDate) : new Date(),
+    endDate: initialDates ? new Date(initialDates.endDate) : new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
+    key: "selection",
+  })
+
   const { id } = useParams()
   const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels/${id}`)
 

@@ -4,7 +4,7 @@ import Searchbox from './Searchbox'
 
 const Hero = () => {
   return (
-    <section id="home" style={{ backgroundImage: `url(${banner})` }} className="relative bg-cover h-[320px] bg-center">
+    <section id="home" style={{ backgroundImage: `url(${banner})` }} className="relative z-10 bg-cover h-[320px] bg-center">
       <div className='w-full h-full backdrop-brightness-75'>
         <div className="container">
           <div className="px-12 lg:px-24 absolute bottom-32 lg:bottom-16 left-0">

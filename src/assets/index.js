@@ -21,6 +21,7 @@ import hotel5 from './hotel5.jpg'
 import globe from './globe.png'
 import smile from './smile.png'
 import party from './party.png'
+import noimg from './noimg.jpg'
 
 const promotions = [
   promotion1,
@@ -39,4 +40,4 @@ const hotelImgs = [
 ]
 
 
-export { countryIcon, banner, flag, promotions, offerImg, airplaneImg, hotelImg, apartmentImg, resortImg, villaImg, inspiration, hotelImgs, globe, smile, party }
+export { countryIcon, banner, flag, promotions, offerImg, airplaneImg, hotelImg, apartmentImg, resortImg, villaImg, inspiration, hotelImgs, globe, smile, party, noimg }

@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
 import format from "date-fns/format"
 import { DateRange } from "react-date-range"
-import { hotelImg } from '../assets'
+import { hotelImg, noimg } from '../assets'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from "react-redux"
 import useFecth from "../hooks/useFetch"
 import { newSearch } from "../redux/searchSlice"
 
 const SearchPanel = ({ search, setSearch }) => {
-  const { destination, dates: initialDates, options } = search
+  const dispatch = useDispatch()
+  const { dates: initialDates = null, options = { adults: 2, children: 0, rooms: 1 } } = search || {}
   const [dateIsOpen, setDateIsOpen] = useState(false)
+  const params = new URLSearchParams(window.location.search);
+  const destination = params.get('destination') || ""
 
   const [dates, setDates] = useState({
-    startDate: new Date(initialDates.startDate),
-    endDate: new Date(initialDates.endDate),
+    startDate: initialDates ? new Date(initialDates.startDate) : new Date(),
+    endDate: initialDates ? new Date(initialDates.endDate) : new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
     key: "selection",
   })
 
@@ -43,6 +46,8 @@ const SearchPanel = ({ search, setSearch }) => {
       startDate: dates.startDate.getTime(),
       endDate: dates.endDate.getTime()
     }
+
+    dispatch(newSearch({ destination, dates: newDates, options }))
 
     setSearch({ destination, dates: newDates, options })
   }
@@ -104,7 +109,8 @@ const SearchPanel = ({ search, setSearch }) => {
 const SearchResult = () => {
   const navigate = useNavigate()
   const [search, setSearch] = useState(JSON.parse(localStorage.getItem("search")))
-  const { destination, dates, options } = search
+  const params = new URLSearchParams(window.location.search);
+  const destination = params.get('destination') || ""
 
   const [min, setMin] = useState(0)
   const [max, setMax] = useState(9999)
@@ -132,7 +138,7 @@ const SearchResult = () => {
               {data.map((item, i) => (
                 <div className="w-full flex flex-wrap bg-white shadow-lg rounded-md overflow-hidden p-2" key={i}>
                   <div className="w-full md:w-[30%]">
-                    <img src={item.photos[0]} alt="" className="w-full h-full min-h-[200px] max-h-[250px] object-cover rounded-md" />
+                    <img src={item.photos[0] || noimg} alt="" className="w-full h-full min-h-[200px] max-h-[250px] object-cover rounded-md" />
                   </div>
                   <div className="w-full md:w-[50%] p-2">
                     <h1 className="font-bold text-xl text-primary md:mb-2">{item.name}</h1>
@@ -144,7 +150,7 @@ const SearchResult = () => {
                   <div className="w-full md:w-[20%] md:text-right p-2">
                     <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
                     <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
-                    <Link to={`/hotels/${item._id}`} state={{ destination, dates, options }} className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold">See availability</Link>
+                    <Link to={`/hotels/${item._id}`} className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold whitespace-nowrap">See availability</Link>
                   </div>
                 </div>
               ))}
