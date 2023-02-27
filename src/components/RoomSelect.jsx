@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 const RoomSelect = ({ hotelId, onClose }) => {
   const [selectedRooms, setSelectedRooms] = useState([])
@@ -14,13 +15,14 @@ const RoomSelect = ({ hotelId, onClose }) => {
     const start = new Date(startDate)
     const end = new Date(endDate)
 
-    const date = new Date(start.getTime())
+    let date = new Date(start.getTime())
 
     const dates = []
 
     while (date <= end) {
-      dates.push(new Date(date))
-      date.setDate(date.getDate() + 1)
+      dates.push(date)
+      // date = date + 1day
+      date = new Date(date.getTime() + (24 * 60 * 60 * 1000))
     }
 
     return dates
@@ -31,9 +33,9 @@ const RoomSelect = ({ hotelId, onClose }) => {
   const isAvailable = (roomNumber) => {
     const unavailable = roomNumber.unavailableDates.some((date) => {
 
-      const timestamps = allDates.map(date=>date.getTime())
-
-      return timestamps.includes(new Date(date).getTime())
+      const formattedDates = allDates.map(date=>format(date, "MM/dd/yyyy"))
+      
+      return formattedDates.includes(format(new Date(date), "MM/dd/yyyy"))
     })
 
     return !unavailable
