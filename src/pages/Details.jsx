@@ -65,7 +65,7 @@ const Details = () => {
         </div>
       </div>
 
-      {modalIsOpen && <RoomSelect onClose={()=>setModalIsOpen(false)} />}
+      {modalIsOpen && <RoomSelect hotelId={id} onClose={()=>setModalIsOpen(false)} />}
     </div>
   )
 }
