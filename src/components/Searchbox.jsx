@@ -57,7 +57,7 @@ const Searchbox = () => {
 
   const [dates, setDates] = useState({
     startDate: new Date(),
-    endDate: new Date(),
+    endDate: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
     key: "selection",
   })
 
@@ -95,7 +95,7 @@ const Searchbox = () => {
     }
     dispatch(newSearch({ destination, dates: newDates, options }))
 
-    navigate("/search", { state: { destination, dates: newDates, options } })
+    navigate("/search")
   }
 
   return (

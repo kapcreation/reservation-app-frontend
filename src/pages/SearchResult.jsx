@@ -1,13 +1,14 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import format from "date-fns/format"
 import { DateRange } from "react-date-range"
 import { hotelImg } from '../assets'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import useFecth from "../hooks/useFetch"
+import { newSearch } from "../redux/searchSlice"
 
-const Search = () => {
-  const { destination, dates: initialDates, options } = JSON.parse(localStorage.getItem("search"))
+const SearchPanel = ({ search, setSearch }) => {
+  const { destination, dates: initialDates, options } = search
   const [dateIsOpen, setDateIsOpen] = useState(false)
 
   const [dates, setDates] = useState({
@@ -31,12 +32,27 @@ const Search = () => {
     setDateIsOpen(prev=>!prev)
   }
 
+  function handleSubmit(e) {
+    e.preventDefault()
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const destination = formData.get("destination")
+    const newDates = {
+      ...dates,
+      startDate: dates.startDate.getTime(),
+      endDate: dates.endDate.getTime()
+    }
+
+    setSearch({ destination, dates: newDates, options })
+  }
+
   return (
-    <form className="p-4 bg-white shadow-lg rounded-md max-w-xs">
+    <form onSubmit={handleSubmit} className="p-4 bg-white shadow-lg rounded-md max-w-xs">
       <h1 className="font-bold text-slate-900 text-xl mb-2">Search</h1>
       <div className="mb-1">
         <label htmlFor="destinationInput" className="text-slate-900">Destination</label>
-        <input type="text" className="w-full border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" defaultValue={destination} />
+        <input type="text" name="destination" className="w-full border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" defaultValue={destination} />
       </div>
       {/* Dates input */}
       <div className="relative mb-2">
@@ -87,13 +103,18 @@ const Search = () => {
 
 const SearchResult = () => {
   const navigate = useNavigate()
-  const { destination, dates, options } = JSON.parse(localStorage.getItem("search"))
+  const [search, setSearch] = useState(JSON.parse(localStorage.getItem("search")))
+  const { destination, dates, options } = search
 
   const [min, setMin] = useState(0)
   const [max, setMax] = useState(9999)
   
-  const { data, loading, error, reFetch } = useFecth(`http://localhost:5000/hotels?city=${destination}&min=${min}&max=${max}`)
+  const { data, loading, error, fetchData } = useFecth(`http://localhost:5000/hotels?city=${destination}&min=${min}&max=${max}`)
 
+  useEffect(() => {
+    fetchData()
+  }, [search])
+  
 
   if (loading) return <div>Loading...</div>
   return (
@@ -101,12 +122,13 @@ const SearchResult = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row">
           <div className="p-4">
-            <Search />
+            <SearchPanel search={search} setSearch={setSearch} />
           </div>
 
           <div className="w-full h-[700px] overflow-x-hidden overflow-y-auto my-4">
             <div className="flex flex-col gap-4 w-full">
 
+              {data.length <= 0 && <span className="text-slate-500">No Hotel Found!</span>}
               {data.map((item, i) => (
                 <div className="w-full flex flex-wrap bg-white shadow-lg rounded-md overflow-hidden p-2" key={i}>
                   <div className="w-full md:w-[30%]">
