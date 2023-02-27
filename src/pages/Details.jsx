@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 const Details = () => {
   const { dates, options } = JSON.parse(localStorage.getItem("search"))
   const { id } = useParams()
-  const { data, loading, error } = useFetch(`/hotels/${id}`)
+  const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels/${id}`)
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const { user } = useAuth()

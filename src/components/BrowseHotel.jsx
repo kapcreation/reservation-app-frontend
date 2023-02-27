@@ -3,7 +3,7 @@ import { hotelImgs } from '../assets'
 import useFetch from '../hooks/useFetch'
 
 const BrowseHotel = () => {
-  const { data, loading, error } = useFetch('/hotels?featured=on&limit=5')
+  const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels?featured=on&limit=5`)
   
   if (loading) return <>Loading...</>
   return (

@@ -3,7 +3,7 @@ import { hotelImg, apartmentImg, resortImg, villaImg } from '../assets'
 import useFetch from '../hooks/useFetch'
 
 const BrowseProperty = () => {
-  const { data, loading, error } = useFetch("/hotels/count/type")
+  const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels/count/type`)
   
   const images = [ hotelImg, apartmentImg, resortImg, villaImg ]
 

@@ -3,7 +3,7 @@ import { flag, promotions } from '../assets'
 import useFecth from '../hooks/useFetch'
 
 const Promotion = () => {
-  const { data, loading, error } = useFecth("/hotels/count/city?cities=London,Bali,Miami,Chicago,Dallas")
+  const { data, loading, error } = useFecth(`${process.env.REACT_APP_API}/hotels/count/city?cities=London,Bali,Miami,Chicago,Dallas`)
 
   if (loading) return <>Loading...</>
 

@@ -109,7 +109,7 @@ const SearchResult = () => {
   const [min, setMin] = useState(0)
   const [max, setMax] = useState(9999)
   
-  const { data, loading, error, fetchData } = useFecth(`http://localhost:5000/hotels?city=${destination}&min=${min}&max=${max}`)
+  const { data, loading, error, fetchData } = useFecth(`${process.env.REACT_APP_API}/hotels?city=${destination}&min=${min}&max=${max}`)
 
   useEffect(() => {
     fetchData()

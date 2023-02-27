@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const RoomSelect = ({ hotelId, onClose }) => {
   const [selectedRooms, setSelectedRooms] = useState([])
-  const { data, loading, error } = useFetch(`/hotels/${hotelId}/rooms`)
+  const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels/${hotelId}/rooms`)
   const { dates } = JSON.parse(localStorage.getItem("search"))
   const navigate = useNavigate()
 
@@ -52,7 +52,7 @@ const RoomSelect = ({ hotelId, onClose }) => {
     e.preventDefault()
 
     try {
-      await axios.put(`/rooms/roomNumbers/setAvailable?ids=${selectedRooms.toString()}`, { dates: allDates })
+      await axios.put(`${process.env.REACT_APP_API}/rooms/roomNumbers/setAvailable?ids=${selectedRooms.toString()}`, { dates: allDates })
 
       onClose()
       navigate("/thankyou")

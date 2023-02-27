@@ -9,12 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) || null)
 
   async function login(data) {
-    const res = await axios.post(`/auth/login`, data)
+    const res = await axios.post(`${process.env.REACT_APP_API}/auth/login`, data)
     setUser(res.data)
   }
 
   async function register(data) {
-    const res = await axios.post("/auth/register", data)
+    const res = await axios.post(`${process.env.REACT_APP_API}/auth/register`, data)
     setUser(res.data)
   }
 
