@@ -52,7 +52,8 @@ const RoomSelect = ({ hotelId, onClose }) => {
     e.preventDefault()
 
     try {
-      await axios.put(`${process.env.REACT_APP_API}/rooms/roomNumbers/setAvailable?ids=${selectedRooms.toString()}`, { dates: allDates })
+      if (selectedRooms.length > 0) 
+        await axios.put(`${process.env.REACT_APP_API}/rooms/roomNumbers/setAvailable?ids=${selectedRooms.toString()}`, { dates: allDates })
 
       onClose()
       navigate("/thankyou")
@@ -71,6 +72,7 @@ const RoomSelect = ({ hotelId, onClose }) => {
 
         <h1 className='font-semibold text-xl text-slate-900 mb-2'>Select your rooms</h1>
 
+        {data.length <= 0 && <span className='text-slate-500'>No Room</span>}
         <div className='p-2 flex flex-col gap-4'>
           {data.map((room, i)=>(
             <div className='flex justify-between' key={i}>
