@@ -1,30 +1,23 @@
 import { useEffect, useState } from "react"
 import format from "date-fns/format"
 import { DateRange } from "react-date-range"
-import { hotelImg, noimg } from '../assets'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from "react-redux"
+import { noimg } from '../assets'
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux"
 import useFecth from "../hooks/useFetch"
 import { newSearch } from "../redux/searchSlice"
 
-const SearchPanel = ({ search, setSearch }) => {
+const SearchPanel = ({ search }) => {
   const dispatch = useDispatch()
-  const { dates: initialDates = null, options = { adults: 2, children: 0, rooms: 1 } } = search || {}
-  const [dateIsOpen, setDateIsOpen] = useState(false)
-  const params = new URLSearchParams(window.location.search);
-  const destination = params.get('destination') || ""
+  const { destination, options } = search
+  const [dates, setDates] = useState(search.dates)
 
-  const [dates, setDates] = useState({
-    startDate: initialDates ? new Date(initialDates.startDate) : new Date(),
-    endDate: initialDates ? new Date(initialDates.endDate) : new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
-    key: "selection",
-  })
+  const [dateIsOpen, setDateIsOpen] = useState(false)  
 
   function handleSelect(ranges){
     const newDates = {
-      startDate: ranges.selection.startDate,
-      endDate: ranges.selection.endDate,
-      key: "selection"
+      startDate: ranges.selection.startDate.getTime(),
+      endDate: ranges.selection.endDate.getTime()
     }
     
     setDates(newDates)
@@ -38,22 +31,29 @@ const SearchPanel = ({ search, setSearch }) => {
   function handleSubmit(e) {
     e.preventDefault()
 
-    const form = e.currentTarget
-    const formData = new FormData(form)
-    const destination = formData.get("destination")
-    const newDates = {
-      ...dates,
-      startDate: dates.startDate.getTime(),
-      endDate: dates.endDate.getTime()
-    }
+    const form = e.currentTarget;
+    const { 
+      destination, 
+      minPrice = null, 
+      maxPrice = null, 
+      adults, 
+      children, 
+      rooms 
+    } = Object.fromEntries(new FormData(form));
 
-    dispatch(newSearch({ destination, dates: newDates, options }))
+    const options = { 
+      minPrice: minPrice ? parseInt(minPrice) : null,
+      maxPrice: maxPrice ? parseInt(maxPrice) : null,
+      adults: parseInt(adults),
+      children: parseInt(children),
+      rooms: parseInt(rooms),
+    };
 
-    setSearch({ destination, dates: newDates, options })
+    dispatch(newSearch({ destination, dates, options }))
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white shadow-lg rounded-md max-w-xs">
+    <form onSubmit={handleSubmit} className="p-4 bg-white shadow-lg rounded-md min-w-[300px] max-w-[350px]">
       <h1 className="font-bold text-slate-900 text-xl mb-2">Search</h1>
       <div className="mb-1">
         <label htmlFor="destinationInput" className="text-slate-900">Destination</label>
@@ -70,7 +70,7 @@ const SearchPanel = ({ search, setSearch }) => {
             editableDateInputs={true}
             onChange={handleSelect}
             moveRangeOnFirstSelection={false}
-            ranges={[dates]}
+            ranges={[{ startDate: new Date(dates.startDate), endDate: new Date(dates.endDate), key: 'selection' }]}
             minDate={new Date()}
             className="border border-primary rounded-md p-1 absolute z-50 top-16 left-1/2 -translate-x-1/2"
           />
@@ -80,24 +80,24 @@ const SearchPanel = ({ search, setSearch }) => {
       <div className="mb-4">
         <h1 className="font-semibold text-lg text-slate-900">Options</h1>
         <div className="flex justify-between items-center mb-1">
-          <p className="text-slate-900">Min price per night</p>
-          <input type="number" name="min" id="minInput" className="w-10 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} />
+          <label htmlFor="minPriceInput" className="text-slate-900">Min price per night</label>
+          <input type="number" name="minPrice" id="minPriceInput" className="w-16 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.minPrice} />
         </div>
         <div className="flex justify-between items-center mb-1">
-          <p className="text-slate-900">Max price per night</p>
-          <input type="number" name="min" id="minInput" className="w-10 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} />
+          <label htmlFor="maxPriceInput" className="text-slate-900">Max price per night</label>
+          <input type="number" name="maxPrice" id="maxPriceInput" className="w-16 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.maxPrice} />
         </div>
         <div className="flex justify-between items-center mb-1">
-          <p className="text-slate-900">Adults</p>
-          <input type="number" name="min" id="minInput" className="w-10 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.adults} />
+          <label htmlFor="adultsInput" className="text-slate-900">Adults</label>
+          <input type="number" name="adults" id="adultsInput" className="w-16 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.adults} />
         </div>
         <div className="flex justify-between items-center mb-1">
-          <p className="text-slate-900">Children</p>
-          <input type="number" name="min" id="minInput" className="w-10 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.children} />
+          <label htmlFor="childrenInput" className="text-slate-900">Children</label>
+          <input type="number" name="children" id="childrenInput" className="w-16 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={0} defaultValue={options.children} />
         </div>
         <div className="flex justify-between items-center mb-1">
-          <p className="text-slate-900">Room</p>
-          <input type="number" name="min" id="minInput" className="w-10 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={1} defaultValue={options.rooms} />
+          <label htmlFor="roomsInput" className="text-slate-900">Room</label>
+          <input type="number" name="rooms" id="roomsInput" className="w-16 border border-primary rounded-md text-slate-900 p-1 focus:outline-none focus:ring" min={1} defaultValue={options.rooms} />
         </div>
       </div>
 
@@ -107,31 +107,31 @@ const SearchPanel = ({ search, setSearch }) => {
 }
 
 const SearchResult = () => {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState(JSON.parse(localStorage.getItem("search")))
-  const params = new URLSearchParams(window.location.search);
-  const destination = params.get('destination') || ""
-
-  const [min, setMin] = useState(0)
-  const [max, setMax] = useState(9999)
+  const search = useSelector(state=>state.search)
+  const { destination, dates, options } = search
+  const { minPrice, maxPrice } = options
   
-  const { data, loading, error, fetchData } = useFecth(`${process.env.REACT_APP_API}/hotels?city=${destination}&min=${min}&max=${max}`)
+  const queryParams = {
+    city: destination,
+    ...(minPrice && { min: minPrice }),
+    ...(maxPrice && { max: maxPrice }),
+  };
+  const apiUrl = `${process.env.REACT_APP_API}/hotels?${new URLSearchParams(queryParams)}`;
+  const { data, loading, error, fetchData } = useFecth(apiUrl);
 
   useEffect(() => {
     fetchData()
   }, [search])
   
-
-  if (loading) return <div>Loading...</div>
   return (
     <div className="bg-slate-100 min-h-screen">
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row">
           <div className="p-4">
-            <SearchPanel search={search} setSearch={setSearch} />
+            <SearchPanel search={search} />
           </div>
 
-          <div className="w-full h-[700px] overflow-x-hidden overflow-y-auto my-4">
+          {loading ? "Loading..." : <div className="w-full h-[700px] overflow-x-hidden overflow-y-auto my-4">
             <div className="flex flex-col gap-4 w-full">
 
               {data.length <= 0 && <span className="text-slate-500">No Hotel Found!</span>}
@@ -148,7 +148,7 @@ const SearchResult = () => {
                     <p className="hidden md:block text-slate-500">{item.desc}</p>
                   </div>
                   <div className="w-full md:w-[20%] md:text-right p-2">
-                    <span className="font-semibold text-slate-900 text-lg md:block">$259</span>
+                    <span className="font-semibold text-slate-900 text-lg md:block">${item.cheapestPrice}</span>
                     <p className="hidden md:block text-slate-500 mb-2">Includes taxes and fees</p>
                     <Link to={`/hotels/${item._id}`} className="ml-1 bg-primary text-white py-1 px-2 rounded-md font-semibold whitespace-nowrap">See availability</Link>
                   </div>
@@ -156,7 +156,7 @@ const SearchResult = () => {
               ))}
              
             </div>
-          </div>
+          </div>}
         </div>
       </div>
     </div>

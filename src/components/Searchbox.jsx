@@ -7,8 +7,8 @@ import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from "react-redux";
-import { newSearch } from '../redux/searchSlice'
+import { useDispatch } from 'react-redux'
+import { newSearch } from "../redux/searchSlice";
 
 const Dropdown = ({ options, setOptions, onClose }) => {
   
@@ -17,25 +17,25 @@ const Dropdown = ({ options, setOptions, onClose }) => {
       <div className="flex justify-between mb-1 items-center">
         <span>Adults</span>
         <div className="border border-primary flex gap-4 items-center">
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, adults: prev.adults--}))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={(options.adults <= 0) || (options.children <= 0 && options.adults <= 1) }>-</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, adults: prev.adults - 1}))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={(options.adults <= 0) || (options.children <= 0 && options.adults <= 1) }>-</button>
           <span className="text-slate-900">{options.adults}</span>
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, adults: prev.adults++}))} className="p-2 text-primary">+</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, adults: prev.adults + 1}))} className="p-2 text-primary">+</button>
         </div>
       </div>
       <div className="flex justify-between mb-1 items-center">
         <span>Children</span>
         <div className="border border-primary flex gap-4 items-center">
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, children: prev.children-- }))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={(options.children <= 0) || (options.adults <= 0 && options.children <= 1)}>-</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, children: prev.children - 1 }))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={(options.children <= 0) || (options.adults <= 0 && options.children <= 1)}>-</button>
           <span className="text-slate-900">{options.children}</span>
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, children: prev.children++ }))} className="p-2 text-primary">+</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, children: prev.children + 1 }))} className="p-2 text-primary">+</button>
         </div>
       </div>
       <div className="flex justify-between mb-1 items-center">
         <span>Rooms</span>
         <div className="border border-primary flex gap-4 items-center">
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, rooms: prev.rooms-- }))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={options.rooms <= 1}>-</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, rooms: prev.rooms - 1 }))} className="p-2 text-primary disabled:cursor-not-allowed" disabled={options.rooms <= 1}>-</button>
           <span className="text-slate-900">{options.rooms}</span>
-          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, rooms: prev.rooms++ }))} className="p-2 text-primary">+</button>
+          <button type="button" onClick={()=>setOptions(prev=>({ ...prev, rooms: prev.rooms + 1 }))} className="p-2 text-primary">+</button>
         </div>
       </div>
 
@@ -49,23 +49,25 @@ const Searchbox = () => {
   const navigate = useNavigate()
   const [dateIsOpen, setDateIsOpen] = useState(false)
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false)
-  const [options, setOptions] = useState({
-    adults: 2,
-    children: 0,
-    rooms: 1,
-  })
 
-  const [dates, setDates] = useState({
-    startDate: new Date(),
-    endDate: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
-    key: "selection",
-  })
+  const [dates, setDates] = useState(
+    {
+      startDate: new Date().getTime(),
+      endDate: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)).getTime()
+    }
+  )
+  const [options, setOptions] = useState(
+    { 
+      adults: 2, 
+      children: 0, 
+      rooms: 1,
+    } 
+  )
 
   function handleSelect(ranges){
     const newDates = {
-      startDate: ranges.selection.startDate,
-      endDate: ranges.selection.endDate,
-      key: "selection"
+      startDate: ranges.selection.startDate.getTime(),
+      endDate: ranges.selection.endDate.getTime()
     }
     
     setDates(newDates)
@@ -88,14 +90,9 @@ const Searchbox = () => {
     const form = e.currentTarget
     const formData = new FormData(form)
     const destination = formData.get("destination")
-    const newDates = {
-      ...dates,
-      startDate: dates.startDate.getTime(),
-      endDate: dates.endDate.getTime()
-    }
-    dispatch(newSearch({ dates: newDates, options }))
 
-    navigate(`/search?destination=${destination}`)
+    dispatch(newSearch({ destination, dates, options }))
+    navigate(`/results`)
   }
 
   return (
@@ -116,7 +113,7 @@ const Searchbox = () => {
               editableDateInputs={true}
               onChange={handleSelect}
               moveRangeOnFirstSelection={false}
-              ranges={[dates]}
+              ranges={[{ startDate: new Date(dates.startDate), endDate: new Date(dates.endDate), key: 'selection' }]}
               minDate={new Date()}
               className="border border-primary rounded-md p-1 absolute z-50 top-12 left-1/2 -translate-x-1/2"
             />

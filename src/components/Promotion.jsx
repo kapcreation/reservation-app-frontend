@@ -3,7 +3,7 @@ import { flag, promotions } from '../assets'
 import useFecth from '../hooks/useFetch'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { resetSearch } from '../redux/searchSlice'
+import { newSearch, resetSearch } from '../redux/searchSlice'
 
 const Promotion = () => {
   const dispatch = useDispatch()
@@ -12,8 +12,9 @@ const Promotion = () => {
   
   function handleNavigate(destination) {
     dispatch(resetSearch())
+    dispatch(newSearch({ destination }))
 
-    navigate(`/search?destination=${destination}`)
+    navigate(`/results`)
   }
 
 

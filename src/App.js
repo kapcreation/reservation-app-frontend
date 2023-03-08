@@ -33,7 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="search" element={<SearchResult />} />
+            <Route path="results" element={<SearchResult />} />
             <Route path="hotels/:id" element={<Details />} />
             <Route path="login" element={<SignIn />} />
             <Route path="register" element={<Register />} />

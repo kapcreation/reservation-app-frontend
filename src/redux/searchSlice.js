@@ -1,16 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-  dates: null,
-  options: {
-    adult: null,
-    children: null,
-    room: null,
-  },
-}
+const initialState = { 
+  destination: "",
+  dates: {
+    startDate: new Date().getTime(),
+    endDate: new Date(new Date().getTime() + (24 * 60 * 60 * 1000)).getTime()
+  }, 
+  options: { 
+    adults: 2, 
+    children: 0, 
+    rooms: 1,
+    minPrice: null,
+    maxPrice: null,
+  } 
+} 
 export const searchSlice = createSlice({
   name: 'search',
-  initialState: initialState,
+  initialState: JSON.parse(localStorage.getItem("search")) || initialState,
   reducers: {
     newSearch: (state, action) => {
       localStorage.setItem("search", JSON.stringify({ ...state, ...action.payload }))

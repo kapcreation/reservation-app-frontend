@@ -4,20 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { useSelector } from 'react-redux';
 
 const RoomSelect = ({ hotelId, onClose }) => {
+  const navigate = useNavigate()
   const [selectedRooms, setSelectedRooms] = useState([])
   const { data, loading, error } = useFetch(`${process.env.REACT_APP_API}/hotels/${hotelId}/rooms`)
 
-  const search = JSON.parse(localStorage.getItem("search")) || {}
-  const { dates: initialDates = null, options = { adults: 2, children: 0, rooms: 1 } } = search
-  const [dates, setDates] = useState({
-    startDate: initialDates ? new Date(initialDates.startDate) : new Date(),
-    endDate: initialDates ? new Date(initialDates.endDate) : new Date(new Date().getTime() + (24 * 60 * 60 * 1000)),
-    key: "selection",
-  })
-  
-  const navigate = useNavigate()
+  const { dates, options } = useSelector(state=>state.search)
 
   function getDatesInRange(startDate, endDate) {
     const start = new Date(startDate)
